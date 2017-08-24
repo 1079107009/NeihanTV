@@ -9,7 +9,7 @@ import com.lp.practice.neihantv.mvp.model.bean.HomeBean
  * 描述：
  */
 interface HomeContract {
-    interface View : BaseView<Presenter>, View {
+    interface View : BaseView<Presenter> {
         fun setData(bean: HomeBean)
     }
 
