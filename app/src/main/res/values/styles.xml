@@ -11,7 +11,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@drawable/landing_background</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <style name="Splash" parent="AppBaseTheme">

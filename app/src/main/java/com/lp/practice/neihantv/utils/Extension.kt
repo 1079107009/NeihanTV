@@ -1,7 +1,10 @@
 package com.lp.practice.neihantv.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.view.Gravity
+import android.widget.Toast
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,4 +22,11 @@ fun <T> Observable<T>.applySchedulers(): Observable<T> {
     return subscribeOn(Schedulers.io())
             .unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+}
+
+fun Context.showToast(message: String): Toast {
+    var toast: Toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+    toast.setGravity(Gravity.CENTER, 0, 0)
+    toast.show()
+    return toast
 }

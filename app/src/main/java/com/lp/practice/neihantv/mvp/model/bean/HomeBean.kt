@@ -23,7 +23,7 @@ data class HomeBean(var nextPageUrl: String?, var nextPublishTime: Long,
                                      var blurred: String?, var sharing: String?, var homepage: String?)
 
                 data class ConsumptionBean(var collectionCount: Int, var shareCount: Int, var replyCount: Int)
-                data class AuthorBean(var icon: String)
+                data class AuthorBean(var icon: String?)
             }
         }
     }
