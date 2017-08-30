@@ -58,52 +58,27 @@
 
         <RadioButton
             android:id="@+id/rb_home"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
+            style="@style/RadioButtonStyle"
             android:drawableTop="@drawable/home_bg_selected"
-            android:gravity="center"
-            android:text="首页"
-            android:textColor="@color/gray"
-            android:textSize="10sp"/>
+            android:text="@string/home"/>
 
         <RadioButton
             android:id="@+id/rb_find"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
+            style="@style/RadioButtonStyle"
             android:drawableTop="@drawable/find_bg_selected"
-            android:gravity="center"
-            android:text="发现"
-            android:textColor="@color/gray"
-            android:textSize="10sp"
-            />
+            android:text="@string/find"/>
 
         <RadioButton
             android:id="@+id/rb_hot"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
+            style="@style/RadioButtonStyle"
             android:drawableTop="@drawable/hot_bg_selected"
-            android:gravity="center"
-            android:text="热门"
-            android:textColor="@color/gray"
-            android:textSize="10sp"/>
+            android:text="@string/hot"/>
 
         <RadioButton
             android:id="@+id/rb_mine"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
+            style="@style/RadioButtonStyle"
             android:drawableTop="@drawable/mine_bg_selected"
-            android:gravity="center"
-            android:text="我的"
-            android:textColor="@color/gray"
-            android:textSize="10sp"/>
+            android:text="@string/my"/>
     </RadioGroup>
 
 </RelativeLayout>

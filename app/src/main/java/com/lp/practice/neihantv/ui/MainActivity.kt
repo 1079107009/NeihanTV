@@ -4,16 +4,24 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.RadioGroup
 import com.gyf.barlibrary.ImmersionBar
 import com.lp.practice.neihantv.R
 import com.lp.practice.neihantv.search.SEARCH_TAG
 import com.lp.practice.neihantv.search.SearchFragment
+import com.lp.practice.neihantv.ui.fragment.FindFragment
 import com.lp.practice.neihantv.ui.fragment.HomeFragment
+import com.lp.practice.neihantv.ui.fragment.HotFragment
+import com.lp.practice.neihantv.ui.fragment.MineFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener {
+
     var homeFragment: HomeFragment? = null
+    var findFragment: FindFragment? = null
+    var hotFragment: HotFragment? = null
+    var mineFragment: MineFragment? = null
     lateinit var searchFragment: SearchFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,28 +42,51 @@ class MainActivity : AppCompatActivity() {
                 if (item is HomeFragment) {
                     homeFragment = item
                 }
+                if (item is FindFragment) {
+                    findFragment = item
+                }
+                if (item is HotFragment) {
+                    hotFragment = item
+                }
+                if (item is MineFragment) {
+                    mineFragment = item
+                }
             }
         } else {
             homeFragment = HomeFragment()
+            findFragment = FindFragment()
+            hotFragment = HotFragment()
+            mineFragment = MineFragment()
             val transaction = supportFragmentManager.beginTransaction()
             transaction.add(R.id.fl_content, homeFragment)
+            transaction.add(R.id.fl_content, findFragment)
+            transaction.add(R.id.fl_content, hotFragment)
+            transaction.add(R.id.fl_content, mineFragment)
             transaction.commit()
         }
-        supportFragmentManager.beginTransaction().show(homeFragment).commit()
+        supportFragmentManager.beginTransaction().show(homeFragment)
+                .hide(findFragment)
+                .hide(hotFragment)
+                .hide(mineFragment)
+                .commit()
     }
 
     private fun initToolbar() {
-        var today = getToday()
+        val today = getToday()
         tv_bar_title.text = today
         tv_bar_title.typeface = Typeface.createFromAsset(assets, "fonts/Lobster-1.4.otf")
         iv_search.setOnClickListener {
-            searchFragment = SearchFragment()
-            searchFragment.show(fragmentManager, SEARCH_TAG)
+            if (rb_mine.isChecked) {
+
+            } else {
+                searchFragment = SearchFragment()
+                searchFragment.show(fragmentManager, SEARCH_TAG)
+            }
         }
     }
 
     private fun getToday(): String {
-        val list = arrayOf("星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+        val list = arrayOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
         val date: Date = Date()
         val calendar = Calendar.getInstance()
         calendar.time = date
@@ -67,7 +98,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRadioButton() {
+        rg_root.check(R.id.rb_home)
+        rg_root.setOnCheckedChangeListener(this)
+    }
 
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        when (checkedId) {
+            R.id.rb_find -> {
+                supportFragmentManager.beginTransaction().show(findFragment)
+                        .hide(homeFragment)
+                        .hide(mineFragment)
+                        .hide(hotFragment)
+                        .commit()
+                tv_bar_title.text = "Discover"
+                tv_bar_title.visibility = View.VISIBLE
+                iv_search.setImageResource(R.drawable.icon_search)
+            }
+            R.id.rb_home -> {
+                supportFragmentManager.beginTransaction().show(homeFragment)
+                        .hide(findFragment)
+                        .hide(mineFragment)
+                        .hide(hotFragment)
+                        .commit()
+                tv_bar_title.text = getToday()
+                tv_bar_title.visibility = View.VISIBLE
+                iv_search.setImageResource(R.drawable.icon_search)
+            }
+            R.id.rb_hot -> {
+                supportFragmentManager.beginTransaction().show(hotFragment)
+                        .hide(findFragment)
+                        .hide(mineFragment)
+                        .hide(homeFragment)
+                        .commit()
+                tv_bar_title.text = "Ranking"
+                tv_bar_title.visibility = View.VISIBLE
+                iv_search.setImageResource(R.drawable.icon_search)
+            }
+            R.id.rb_mine -> {
+                supportFragmentManager.beginTransaction().show(mineFragment)
+                        .hide(findFragment)
+                        .hide(homeFragment)
+                        .hide(hotFragment)
+                        .commit()
+                tv_bar_title.visibility = View.INVISIBLE
+                iv_search.setImageResource(R.drawable.icon_setting)
+            }
+        }
     }
 
     override fun onBackPressed() {

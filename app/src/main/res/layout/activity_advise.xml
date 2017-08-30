@@ -10,7 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:id="@+id/tv_bar_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="16sp"/>
+    </android.support.v7.widget.Toolbar>
 
     <View
         android:layout_width="match_parent"
@@ -71,7 +80,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="15dp"
-        android:text="lrh19930211@163.com"
+        android:text="@string/email"
         android:textColor="@color/black"
         android:textSize="16sp"/>
 
@@ -105,7 +114,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="15dp"
-        android:text="https://github.com/LRH1993"
+        android:text="@string/github"
         android:textColor="@color/black"
         android:textSize="16sp"/>
 
@@ -129,7 +138,7 @@
             android:layout_centerInParent="true"
             android:layout_toRightOf="@+id/iv_blog"
             android:padding="15dp"
-            android:text="博客"
+            android:text="@string/blog"
             android:textSize="16sp"/>
     </RelativeLayout>
 
@@ -139,7 +148,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="15dp"
-        android:text="www.lruheng.com"
+        android:text="@string/jianshu"
         android:textColor="@color/black"
         android:textSize="16sp"/>
 

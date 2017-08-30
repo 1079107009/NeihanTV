@@ -11,6 +11,7 @@ import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.lp.practice.neihantv.R
@@ -50,6 +51,7 @@ class VideoDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_video_detail)
         bean = intent.getParcelableExtra<VideoBean>("data")
         initView()
@@ -207,7 +209,7 @@ class VideoDetailActivity : AppCompatActivity() {
             } else {
                 //新版本isIfCurrentIsFullscreen的标志位内部提前设置了，所以不会和手动点击冲突
                 if (gsy_player.isIfCurrentIsFullscreen) {
-                    StandardGSYVideoPlayer.backFromWindowFull(this);
+                    StandardGSYVideoPlayer.backFromWindowFull(this)
                 }
                 orientationUtils.let { orientationUtils.isEnable = true }
             }
