@@ -65,7 +65,7 @@ class FindDetailActivity : AppCompatActivity(), FindDetailContract.View, SwipeRe
                 var lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastPosition == mList.size - 1) {
                     if (data != null) {
-                        mPresenter?.requesMoreData(mstart, name, "date")
+                        mPresenter?.requestMoreData(mstart, name, "date")
                         mstart = mstart.plus(10)
                     }
 

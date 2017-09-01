@@ -5,6 +5,7 @@ import android.view.View
 import com.lp.practice.neihantv.R
 import com.lp.practice.neihantv.ui.AdviseActivity
 import com.lp.practice.neihantv.ui.CacheActivity
+import com.lp.practice.neihantv.ui.LoginActivity
 import com.lp.practice.neihantv.ui.WatchActivity
 import com.lp.practice.neihantv.utils.newIntent
 
@@ -27,6 +28,9 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             R.id.tv_save -> {
                 activity.newIntent<CacheActivity>()
             }
+            R.id.imageView -> {
+                activity.newIntent<LoginActivity>()
+            }
         }
     }
 
@@ -34,6 +38,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         tv_advise.setOnClickListener(this)
         tv_watch.setOnClickListener(this)
         tv_save.setOnClickListener(this)
+        imageView.setOnClickListener(this)
         tv_advise.typeface = Typeface.createFromAsset(context?.assets, "fonts/FZLanTingHeiS-DB1-GB-Regular.TTF")
         tv_watch.typeface = Typeface.createFromAsset(context?.assets, "fonts/FZLanTingHeiS-DB1-GB-Regular.TTF")
         tv_save.typeface = Typeface.createFromAsset(context?.assets, "fonts/FZLanTingHeiS-DB1-GB-Regular.TTF")

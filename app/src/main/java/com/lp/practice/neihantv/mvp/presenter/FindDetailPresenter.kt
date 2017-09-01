@@ -37,7 +37,7 @@ class FindDetailPresenter(context: Context, view: FindDetailContract.View) : Fin
                 }
     }
 
-    fun requesMoreData(start: Int, categoryName: String, strategy: String) {
+    fun requestMoreData(start: Int, categoryName: String, strategy: String) {
         val observable: Observable<HotBean>? = mContext?.let { mModel.loadMoreData(mContext!!, start, categoryName, strategy) }
         observable?.applySchedulers()?.subscribe { bean: HotBean ->
             mView?.setData(bean)

@@ -2,12 +2,10 @@ package com.lp.practice.neihantv.ui
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Typeface
-import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -20,34 +18,24 @@ import com.lp.practice.neihantv.utils.*
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Function
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import zlc.season.rxdownload2.RxDownload
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.util.concurrent.ExecutionException
 
 class VideoDetailActivity : AppCompatActivity() {
 
-    companion object {
-        var MSG_IMAGE_LOADED = 101
-    }
-
     lateinit var imageView: ImageView
     lateinit var bean: VideoBean
     var isPlay: Boolean = false
     var isPause: Boolean = false
     lateinit var orientationUtils: OrientationUtils
-    var mHandler: Handler = object : Handler() {
-        override fun handleMessage(msg: Message?) {
-            super.handleMessage(msg)
-            when (msg?.what) {
-                MSG_IMAGE_LOADED -> {
-                    Log.e("video", "setImage")
-                    gsy_player.setThumbImageView(imageView)
-                }
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +57,7 @@ class VideoDetailActivity : AppCompatActivity() {
         //增加封面
         imageView = ImageView(this)
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        ImageViewAsyncTask(mHandler, this, imageView).execute(bean.feed)
+        setThumbImageView(bean.feed)
         gsy_player.titleTextView.visibility = View.GONE
         gsy_player.backButton.visibility = View.VISIBLE
         orientationUtils = OrientationUtils(this, gsy_player)
@@ -114,6 +102,43 @@ class VideoDetailActivity : AppCompatActivity() {
         gsy_player.backButton.setOnClickListener(View.OnClickListener {
             onBackPressed()
         })
+    }
+
+    private fun setThumbImageView(feed: String?) {
+        Observable.just(feed)
+                .subscribeOn(Schedulers.io())
+                .flatMap(Function<String?, Observable<String?>> { t ->
+                    Log.e("Thread", Thread.currentThread().name)
+                    val future = Glide.with(this@VideoDetailActivity)
+                            .load(t)
+                            .downloadOnly(100, 100)
+                    var cacheFile: File? = null
+                    try {
+                        cacheFile = future.get()
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    } catch (e: ExecutionException) {
+                        e.printStackTrace()
+                    }
+                    return@Function Observable.just(cacheFile?.absolutePath)
+                })
+                .map { t ->
+                    Log.e("Thread", Thread.currentThread().name)
+                    var mIs: FileInputStream? = null
+                    try {
+                        mIs = FileInputStream(t)
+                    } catch (e: FileNotFoundException) {
+                        e.printStackTrace()
+                    }
+                    BitmapFactory.decodeStream(mIs)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    bitmap: Bitmap ->
+                    Log.e("Thread", Thread.currentThread().name)
+                    imageView.setImageBitmap(bitmap)
+                    gsy_player.setThumbImageView(imageView)
+                }
     }
 
     private fun initView() {
@@ -215,41 +240,4 @@ class VideoDetailActivity : AppCompatActivity() {
             }
         }
     }
-
-    private class ImageViewAsyncTask(handler: Handler, activity: VideoDetailActivity, private val mImageView: ImageView) : AsyncTask<String, Void, String>() {
-        private var handler = handler
-        private var mPath: String? = null
-        private var mIs: FileInputStream? = null
-        private var mActivity: VideoDetailActivity = activity
-        override fun doInBackground(vararg params: String): String? {
-            val future = Glide.with(mActivity)
-                    .load(params[0])
-                    .downloadOnly(100, 100)
-            try {
-                val cacheFile = future.get()
-                mPath = cacheFile.absolutePath
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            } catch (e: ExecutionException) {
-                e.printStackTrace()
-            }
-
-            return mPath
-        }
-
-        override fun onPostExecute(s: String) {
-            super.onPostExecute(s)
-            try {
-                mIs = FileInputStream(s)
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-            }
-            val bitmap = BitmapFactory.decodeStream(mIs)
-            mImageView.setImageBitmap(bitmap)
-            val message = handler.obtainMessage()
-            message.what = MSG_IMAGE_LOADED
-            handler.sendMessage(message)
-        }
-    }
-
 }
